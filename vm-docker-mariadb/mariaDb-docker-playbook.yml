@@ -1,0 +1,56 @@
+---
+- name: provision_eriks
+  hosts: all
+  vars_files:
+    - vars.yml
+  become: true
+
+  tasks:
+
+    - name: Installing docker related dependencies
+      yum:   
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - python-pip
+
+    - name: Configuring docker-ce repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: 0644
+
+    - name: Installing docker
+      yum:   
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - docker-ce
+        - docker-ce-cli 
+        - containerd.io
+        
+    - name: Starting and Enabling Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    
+    - name: Install docker python package 
+      pip:
+        name: docker 
+
+    - name: Setting up the mariaDB container 
+      docker_container:
+        image: mariadb:10.2.14
+        name: mariadb
+        state: started
+        restart: yes
+        env:
+          MYSQL_ROOT_PASSWORD: "{{mariadb_root_password}}"
+          MYSQL_PASSWORD: "{{mariadb_password}}"
+          MYSQL_USER: "{{mariadb_username}}"
+
+
