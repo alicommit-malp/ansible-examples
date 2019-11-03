@@ -1,5 +1,5 @@
 ---
-- name: provision_eriks
+- name: provision_mariadb_on_docker_in_vm
   hosts: all
   vars_files:
     - vars.yml
