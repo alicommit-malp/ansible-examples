@@ -48,6 +48,8 @@
         name: mariadb
         state: started
         restart: yes
+        ports:
+        - "33306:3306"
         env:
           MYSQL_ROOT_PASSWORD: "{{mariadb_root_password}}"
           MYSQL_PASSWORD: "{{mariadb_password}}"
