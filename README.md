@@ -170,4 +170,6 @@ n
 5.5.5-10.2.14-MariaDB-10.2.14+maria~jessi
 ```
 
+All resources are in Github at [alicommit-malp/ansible-examples](https://github.com/alicommit-malp/ansible-examples)
+
 Happy coding :)
