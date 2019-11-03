@@ -4,7 +4,18 @@ Do you want to automate the setting up of your production/test servers? so keep 
 
 All resources are in Github at [alicommit-malp/ansible-examples](https://github.com/alicommit-malp/ansible-examples)
 
-## Abstract Use case 
+## Usage 
+you need to install Vagrant ver >= 1.7.0 on your system from [here](https://www.vagrantup.com/downloads.html) 
+```
+git clone https://github.com/alicommit-malp/ansible-examples
+cd ansible-examples/vm-docker-mariadb
+sudo vagrant up --provision
+
+//test your connection to the mariaDb from localhost
+telnet 192.168.3.141 33306
+```
+
+## Use case 
 
 - creating a virtual machine, any distribuation or version
   -  in our case CentOs7
@@ -15,13 +26,12 @@ All resources are in Github at [alicommit-malp/ansible-examples](https://github.
 we will use [Vagrant](https://www.vagrantup.com) to create our virtual machine , you can install it from [here](https://www.vagrantup.com/downloads.html) for your desired operation system.
 
 
-then we will ask the Vagrant to make a VM for us using the centOs7 image and  map the localhost's port 33306 to the VM's port of 3306 futhermore to assign 192.168.3.141 as the ip address of the VM like this 
+then we will ask the Vagrant to make a VM for us using the centOs7 image and  map the localhost's port 33306 to the VM's port of 3306, futhermore to assign 192.168.3.141 as the ip address of the VM 
 
 ```
 config.vm.box = "generic/centos7"
 config.vm.network :private_network, ip: "192.168.3.141"
 config.vm.network "forwarded_port", guest: 3306, host: 33306
-
 ```
 
 Vagrant has a smooth integration with [Ansible](https://www.ansible.com), therefore we can directly use Ansible to provision the freshly created CentOs7 VM as we demand, by passing the name of the playbook file path to it.
