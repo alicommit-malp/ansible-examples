@@ -17,16 +17,16 @@ telnet 192.168.3.141 33306
 
 ## Use case 
 
-- creating a virtual machine, any distribuation or version
+- creating a virtual machine, any distribution or version
   -  in our case CentOs7
-- installing the docker deamon and docker client 
+- installing the docker daemon and docker client 
 - running your desire docker image as a container
   - in our case MariaDb version 10.2.14
   
 we will use [Vagrant](https://www.vagrantup.com) to create our virtual machine , you can install it from [here](https://www.vagrantup.com/downloads.html) for your desired operation system.
 
 
-then we will ask the Vagrant to make a VM for us using the centOs7 image and  map the localhost's port 33306 to the VM's port of 3306, futhermore to assign 192.168.3.141 as the ip address of the VM 
+then we will ask the Vagrant to make a VM for us using the centOs7 image and  map the localhost port 33306 to the VM's port of 3306, futhermore to assign 192.168.3.141 as the ip address of the VM 
 
 ```
 config.vm.box = "generic/centos7"
@@ -46,7 +46,7 @@ Vagrant.require_version ">= 1.7.0"
 
 Vagrant.configure(2) do |config|
 
-  config.vm.hostname = "eriks"
+  config.vm.hostname = "maria_host"
   config.vm.box = "generic/centos7"
 
   config.vm.network :private_network, ip: "192.168.3.141"
@@ -60,6 +60,7 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "mariaDb-docker-playbook.yml"
   end
 end
+
 ```
 and we will run it like this 
 
@@ -72,7 +73,7 @@ for the sake of our example we are using a playbook file like this
 
 ```yml
 ---
-- name: provision_eriks
+- name: provision_mariadb_on_docker_in_vm
   hosts: all
   vars_files:
     - vars.yml
@@ -130,7 +131,7 @@ for the sake of our example we are using a playbook file like this
 
 ```
 
-as it can be seen above, the Ansible file is very straight forward, the only point which i need to make here is to exaplin a bit about the vars.yml file because if you look inside of it you will see something like this
+as it can be seen above, the Ansible file is very straight forward, the only point which i need to make here is to explain a bit about the vars.yml file because if you look inside of it you will see something like this
 
 ```
 $ANSIBLE_VAULT;1.1;AES256
@@ -146,7 +147,7 @@ $ANSIBLE_VAULT;1.1;AES256
 
 ```
 
-yes you have guessed correctly, it has been encrypted, and this is another fantastic feature of the Ansible, depite of the fact that I have shared the repository with you but still you can not figure out what is the value of the MYSQL_PASSWORD for instance 
+yes you have guessed correctly, it has been encrypted, and this is another fantastic feature of the Ansible, despite of the fact that I have shared the repository with you but still you can not figure out what is the value of the MYSQL_PASSWORD for instance 
 
 ```
 MYSQL_ROOT_PASSWORD: "{{mariadb_root_password}}"
@@ -157,9 +158,9 @@ MYSQL_USER: "{{mariadb_username}}"
 but the ansible can figure the values out in runtime.
 
 ## Ansible Vault
-with [ansible valut](https://docs.ansible.com/ansible/latest/user_guide/vault.html) you can encrypt the varibale files with password so when you are provisioning the server you need to provide that password or you can use a password file if you wish to automate this part as well.
+with [ansible valut](https://docs.ansible.com/ansible/latest/user_guide/vault.html) you can encrypt the variable files with password so when you are provisioning the server you need to provide that password or you can use a password file if you wish to automate this part as well.
 
-you can test the connection to the MariaDb living inside the container whihc is living inside the VM like this
+you can test the connection to the MariaDb living inside the container which is living inside the VM like this
 
 ```
 ❯ telnet 192.168.3.141 33306
