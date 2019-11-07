@@ -11,6 +11,8 @@ git clone https://github.com/alicommit-malp/ansible-examples
 cd ansible-examples/vm-docker-mariadb
 sudo vagrant up --provision
 
+//password is alialp
+
 //test your connection to the mariaDb from localhost
 telnet 192.168.3.141 33306
 ```
